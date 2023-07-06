@@ -1,5 +1,5 @@
 <?php
-$conn = new PDO("mysql:host=localhost;dbname=portail","root","");;
+$conn = new PDO("mysql:host=localhost;dbname=portail","root","");
 
 if (isset($_GET['apprenant'])&& !empty($_GET['apprenant'])) {
         // Récupérer un seul apprenant à travers son id
@@ -22,8 +22,6 @@ if (isset($_GET['edit'])&& !empty($_GET['edit']) && isset($_POST) && !empty($_PO
     $photo = $matricule.".".strtolower(pathinfo($_FILES['photo']['name'],PATHINFO_EXTENSION));
     else
     $photo = $oldimage;
-
-    
      $insert = $conn->prepare("UPDATE apprenants Set nom = ?, prenom = ?, age = ?,
      date_naissance = ?, email = ?, telephone = ?, promotion = ?, photo = ?, annee_certification = ?
      where id = ?");
@@ -39,14 +37,19 @@ if (isset($_GET['edit'])&& !empty($_GET['edit']) && isset($_POST) && !empty($_PO
     die();
 }
 $req = "order by id DESC LIMIT 10 ";
-if(isset($_GET['app']) && $_GET['app'] == "all"){
+$v = "0";
+$vv = "10";
+if(isset($_GET['index'])){
     // ajouter d'un requette qui nous permettre d'afficher tous les apprenants ;
-    $req = "";
+    $v = $_GET['index'];
 }
 
+    
     // Récupérer tous les apprenants
-    $req = $conn->prepare("SELECT * FROM apprenants order by id desc "); //.$req;
+    $req = $conn->prepare("SELECT * FROM apprenants order by id desc LIMIT ?,? "); //.$req;
 
+    $req->bindParam(1,$v,PDO::PARAM_INT);
+    $req->bindParam(2,$vv,PDO::PARAM_INT);
     $req->execute();
     $data = $req->fetchAll(PDO::FETCH_OBJ);
     
@@ -56,6 +59,9 @@ if(isset($_GET['app']) && $_GET['app'] == "all"){
 <?php
   
     if (isset($_POST) && !empty($_POST)) {
+      //  for ($i=0; $i < 1000; $i++) { 
+            
+        
         extract($_POST);
         $target = "uploads/";
         var_dump($_FILES['photo']);
@@ -69,14 +75,14 @@ if(isset($_GET['app']) && $_GET['app'] == "all"){
          date_naissance, email, telephone, promotion, photo, annee_certification)
          VALUES (?,?,?,?,?,?,?,?,?,?)");
 
-        if($insert->execute([$matricule,$nom,$prenom,$age,$date_naissance,$email,$telephpone,$promotion,
+        if($insert->execute([$matricule,$nom.$i,$prenom.$i,$age,$date_naissance,$email,$telephone,$promotion,
         $photo,$annee])){
             move_uploaded_file($_FILES['photo']['tmp_name'],"uploads/".$photo);
-            header("location:index.html");
+           // header("location:index.html");
         }else{
             echo "Erreur dans les données";
         }
-       
+     //   }
     }
 
     function getApprenantMatricule(){
