@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    
     <link rel="stylesheet" href="style.css">
     <title>Accueil | Liste des apprenants</title>
 
@@ -33,16 +35,39 @@
         .hide{
             display: none;
         }
+        .input-group-text{
+            cursor: pointer;
+            border-radius: 0px;
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+        }
     </style>
 </head>
 <body>
    <div class="container">
+    
     <header>
         <h3>Listes de apprenants</h3>
         <a href="add.html" class="btn btn-primary">Ajouter apprenant</a>
 
     </header>
-    
+    <div class="filter-container">
+        <br>
+        <div class="row">
+            <div class="input-group">
+                <select style="display: none;" onchange="search(this)" id="filter" class="form-select">
+                    <option value="all" selected>Filtrer</option>
+                    <option value="matricule">Matricule</option>
+                    <option value="prenom">Prénom</option>
+                    <option value="nom">Nom</option>
+                </select>
+                <input placeholder="Rechercher un apprénant" oninput="search(this)" id="search" name="search" type="text" class="form-control">
+                <div class="input-group-prepend">
+                  <span onclick="search(this)" class="input-group-text" id="">Recherche</span>
+                </div>
+              </div>
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <th>photo</th>
@@ -62,8 +87,9 @@
         </tbody>
     </table>
     <footer>
-        <div style="text-align: center;"><a onclick="showMore(this)" data-index="0" class="btn btn-primary">Afficher plus</a></div>
+        <div id="showmore" style="text-align: center;"><a onclick="showMore(this)" data-index="0" class="btn btn-primary">Afficher plus</a></div>
     </footer>
+    <br>
    </div>
     <script src="script.js"></script>
     <script>
@@ -71,7 +97,37 @@
             me.dataset.index = parseInt(me.dataset.index)+10;
             getListApprenants("?index="+me.dataset.index);
         }
+        function search(me) {
+            var tbody = document.getElementById("apprenantsRow"),
+                showmore = document.getElementById("showmore"),
+                filter = document.getElementById("filter"),
+                inputSearch = document.getElementById("search").value,
+                filterSelectedValue = filter.options[filter.selectedIndex].value;
+                if(inputSearch == ""){
+                    tbody.innerHTML = "";
+                    showmore.style.display = "block";
+                    getListApprenants();
+                }else
+                    showmore.style.display = "none";
+                    tbody.innerHTML = "";
+                    getListApprenants("?search="+inputSearch+"&filter="+filterSelectedValue);
+
+                
+                //console.log(filter.options[filter.selectedIndex].value);
+        }
         getListApprenants();
+
+
+        document.addEventListener('scroll', function(e) {
+        let documentHeight = document.body.scrollHeight;
+        let currentScroll = window.scrollY + window.innerHeight;
+        let modifier = 10; 
+        console.log(currentScroll+200,documentHeight);
+        if(currentScroll + modifier > documentHeight) {
+            alert("Vous êtes au bottom")
+            console.log('You are at the bottom!')
+        }
+    })
   </script>
 </body>
 </html>

@@ -129,7 +129,7 @@
 
             <div class="mb-3">
                 <label for="telephone" class="form-label">Téléphone</label>
-                <input class="form-control" id="telephone" type="number"  placeholder="Numéro de Téléphone" name="telephone" value="example@gmail.com" required>
+                <input class="form-control" id="telephone" type="number"  placeholder="Numéro de Téléphone" name="telephone" value="" required>
             </div>
             <div class="mb-3 photo">
                 <label for="photo" class="form-label">Image</label>
@@ -148,15 +148,18 @@
              <input class="btn btn-primary" type="submit" value="Enregistrer">
         </form>
         <div id="action">
-            <a class="btn btn-primary btn-lg" href="add.html">&#9998;</a> 
-            <a class="btn btn-danger btn-lg" onclick="action(this,event)" class="remove" href="delete.php?apprenant=${data[d].id}">&#128465;</a>
+            <a id="editApprenant" class="btn btn-primary btn-lg" href="add.html">&#9998;</a> 
+            <a id="deleteApprenant" class="btn btn-danger btn-lg" onclick="action(this,event)" class="remove" href="delete.php">&#128465;</a>
         </div>
         <br><br>
     </div>
 
         <script src="script.js"></script>
     <script>
-        
+        // add.html?apprenant=1051.
+        document.getElementById("editApprenant").href += "?"+window.location.search.split("&")[1];
+        document.getElementById("deleteApprenant").href += "?"+window.location.search.split("&")[1];
+       // console.log(window.location.search.split("&"));
         if(window.location.search != ""){
              getApprenant(window.location.search);
              if(window.location.search.includes('view')){

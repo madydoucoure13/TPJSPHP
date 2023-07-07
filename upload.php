@@ -11,12 +11,10 @@ if (isset($_GET['apprenant'])&& !empty($_GET['apprenant'])) {
         echo json_encode($data);
         die();
 }
-
   
-if (isset($_GET['edit'])&& !empty($_GET['edit']) && isset($_POST) && !empty($_POST)) {
+if (isset($_GET['edit']) && !empty($_GET['edit']) && isset($_POST) && !empty($_POST)) {
     extract($_POST);
-    $target = "uploads/";
-  
+    $target = "uploads/";  
    // $matricule = $promotion.generer_matricule(4);
    if(isset($_FILES['photo']) && !empty($_FILES['photo']))
     $photo = $matricule.".".strtolower(pathinfo($_FILES['photo']['name'],PATHINFO_EXTENSION));
@@ -34,6 +32,22 @@ if (isset($_GET['edit'])&& !empty($_GET['edit']) && isset($_POST) && !empty($_PO
         echo "Erreur dans les données";
     }
    
+    die();
+}
+if (isset($_GET['search']) && !empty($_GET['search']) && isset($_GET['filter']) && !empty($_GET['filter'])) {
+    
+    // Récupérer tous les apprenants
+    $search = "%".$_GET['search']."%";
+    $req = $conn->prepare("SELECT * FROM apprenants where 
+    matricule like :search
+    OR prenom like :search
+    OR nom like :search
+    order by id desc"); //.$req;
+
+    $req->bindParam(":search",$search,PDO::PARAM_STR);
+    $req->execute();
+    $data = $req->fetchAll(PDO::FETCH_OBJ);
+    echo json_encode($data);
     die();
 }
 $req = "order by id DESC LIMIT 10 ";
@@ -59,9 +73,7 @@ if(isset($_GET['index'])){
 <?php
   
     if (isset($_POST) && !empty($_POST)) {
-      //  for ($i=0; $i < 1000; $i++) { 
-            
-        
+      //  for ($i=0; $i < 1000; $i++) {         
         extract($_POST);
         $target = "uploads/";
         var_dump($_FILES['photo']);
@@ -85,9 +97,7 @@ if(isset($_GET['index'])){
      //   }
     }
 
-    function getApprenantMatricule(){
-        
-    }
+   
     function generer_matricule($longueur) {
         $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $matricule = '';

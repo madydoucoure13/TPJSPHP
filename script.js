@@ -16,6 +16,7 @@ async function getApprenant(parameter) {
             form.appendChild(oldImage);
          var imgApp = document.createElement("img");
             imgApp.src = "uploads/"+data.photo;
+            imgApp.setAttribute("onerror","getDefaultImg(this)");
             form.parentNode.insertBefore(imgApp, form.parentNode.children[0]);
          var  inputMatricule = document.createElement('input');
             inputMatricule.setAttribute("readonly","true");
@@ -49,7 +50,7 @@ async function getListApprenants(parameter = "?index=0") {
                 trTag.onclick = openLink;
                 trTag.setAttribute("data-link", "apprenant="+data[d].id)
                 trTag.innerHTML = 
-                `<td onclick="openLink(this)"><img src="${'uploads/'+data[d].photo}"></td>
+                `<td onclick="openLink(this)"><img onerror="getDefaultImg(this)" src="${'uploads/'+data[d].photo}"></td>
                 <td onclick="openLink(this)">${data[d].matricule}</td>
                 <td onclick="openLink(this)">${data[d].prenom}</td>
                 <td onclick="openLink(this)">${data[d].nom}</td>
@@ -120,5 +121,10 @@ function fadeout(elem) {
     }
   
     }, 200);
+}
+
+function getDefaultImg(me){
+    console.log(window.location);
+    me.src = "uploads/default.png";
 }
 //getListApprenants();
